@@ -1,0 +1,29 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  height: 100vh;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header-title{
+  color: #00d5b1;
+  font-size: 72px;
+  text-align: center;
+}
+
+.board{
+  display: grid;
+  grid: repeat(3, 150px)/ repeat(3, 150px);
+  place-content: center;
+  border: 1px solid #04d482;
+  width: min-content;
+}
+.cell{
+  border: 1px solid #04d482;
+}
