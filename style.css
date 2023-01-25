@@ -18,6 +18,13 @@ body{
   text-align: center;
 }
 
+.current-turn{
+  color: #00d5b1;
+  font-size: 36px;
+  text-align: center;
+
+}
+
 .board{
   display: grid;
   grid: repeat(3, 150px)/ repeat(3, 150px);

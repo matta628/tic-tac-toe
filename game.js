@@ -6,7 +6,7 @@ const Player = (name, color) => {
   return { getName, getColor };
 };
 
-const joe = Player('Jatt', '#fe5b5a');
+const joe = Player('Joe', '#fe5b5a');
 const matt = Player('Matt', '#00d5b1');
 
 const gameBoard = (() => {
@@ -58,17 +58,19 @@ const gameBoard = (() => {
 })();
 
 const displayController = (() => {
-  const update = () => {
+  const update = (currentPlayer) => {
     const cells = document.querySelectorAll('.cell');
     cells.forEach((cell) => {
       const row = +cell.dataset.row;
       const col = +cell.dataset.col;
       if (!gameBoard.cellEmpty(row, col)) {
         const player = gameBoard.getCellPlayer(row, col);
-        console.log(player);
         cell.style.backgroundColor = player.getColor();
       }
     });
+    const currentTurn = document.querySelector('.current-turn');
+    console.log(currentTurn);
+    currentTurn.textContent = `${currentPlayer.getName()}'s turn`;
   };
   return { update };
 })();
@@ -84,7 +86,7 @@ const game = ((player1, player2) => {
     if (!gameBoard.cellEmpty(row, col)) return;
     gameBoard.select(currentPlayer, row, col);
     currentPlayer = (currentPlayer === player1) ? player2 : player1;
-    displayController.update();
+    displayController.update(currentPlayer);
   };
 
   const setup = () => {
@@ -92,6 +94,7 @@ const game = ((player1, player2) => {
     cells.forEach((cell) => {
       cell.addEventListener('click', nextSelection.bind(this, cell));
     });
+    displayController.update(currentPlayer);
   };
   return { setup };
 })(matt, joe);
