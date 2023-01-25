@@ -6,14 +6,14 @@ const Player = (name, color) => {
   return { getName, getColor };
 };
 
-const player1 = Player('Matt', '#d4046f');
-// const player2 = Player('CPU', '#d46c04');
+const joe = Player('Jatt', '#fe5b5a');
+const matt = Player('Matt', '#00d5b1');
 
 const gameBoard = (() => {
   const board = [
-    [{}, {}, player1],
-    [{}, {}, player1],
-    [{}, {}, player1],
+    [{}, {}, {}],
+    [{}, {}, {}],
+    [{}, {}, {}],
   ];
   const select = (player, row, col) => {
     board[row][col] = player;
@@ -21,6 +21,7 @@ const gameBoard = (() => {
   const cellEmpty = (row, col) => Object.keys(board[row][col]).length === 0;
   const getCellPlayer = (row, col) => board[row][col];
   const getWinner = () => {
+    // TODO: detect tie!
     // rows
     for (let row = 0; row < 3; row++) {
       if (
@@ -60,8 +61,8 @@ const displayController = (() => {
   const update = () => {
     const cells = document.querySelectorAll('.cell');
     cells.forEach((cell) => {
-      const row = cell.className.split(' ')[1].split('-')[1];
-      const col = cell.className.split(' ')[2].split('-')[1];
+      const row = +cell.dataset.row;
+      const col = +cell.dataset.col;
       if (!gameBoard.cellEmpty(row, col)) {
         const player = gameBoard.getCellPlayer(row, col);
         console.log(player);
@@ -72,4 +73,27 @@ const displayController = (() => {
   return { update };
 })();
 
-displayController.update();
+const game = ((player1, player2) => {
+  let currentPlayer = player1;
+  const gameover = false;
+
+  const nextSelection = (cell) => {
+    if (gameover === true) return;
+    const row = +cell.dataset.row;
+    const col = +cell.dataset.col;
+    if (!gameBoard.cellEmpty(row, col)) return;
+    gameBoard.select(currentPlayer, row, col);
+    currentPlayer = (currentPlayer === player1) ? player2 : player1;
+    displayController.update();
+  };
+
+  const setup = () => {
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach((cell) => {
+      cell.addEventListener('click', nextSelection.bind(this, cell));
+    });
+  };
+  return { setup };
+})(matt, joe);
+
+game.setup();

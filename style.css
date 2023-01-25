@@ -22,16 +22,16 @@ body{
   display: grid;
   grid: repeat(3, 150px)/ repeat(3, 150px);
   place-content: center;
-  border: 1px solid #04d482;
+  border: 2px solid #00473b;
   width: min-content;
 }
 .cell{
-  border: 1px solid #04d482;
+  border: 1px solid #00473b;
 }
 
 /* .cell:nth-child(2n+1){
-  background-color: #d4046f;
+  background-color: #00d5b1;
 }
 .cell:nth-child(2n+2){
-  background-color: #d46c04;
+  background-color: rgb(36, 36, 36);
 } */
