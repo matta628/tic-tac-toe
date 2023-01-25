@@ -28,3 +28,10 @@ body{
 .cell{
   border: 1px solid #04d482;
 }
+
+/* .cell:nth-child(2n+1){
+  background-color: #d4046f;
+}
+.cell:nth-child(2n+2){
+  background-color: #d46c04;
+} */
