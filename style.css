@@ -5,7 +5,8 @@
 
 body{
   height: 100vh;
-  background-color: black;
+  color: #00d5b1;
+  background-color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -13,16 +14,13 @@ body{
 }
 
 .header-title{
-  color: #00d5b1;
   font-size: 72px;
   text-align: center;
 }
 
 .current-turn{
-  color: #00d5b1;
   font-size: 36px;
   text-align: center;
-
 }
 
 .board{

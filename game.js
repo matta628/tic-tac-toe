@@ -6,8 +6,8 @@ const Player = (name, color) => {
   return { getName, getColor };
 };
 
-const joe = Player('Joe', '#fe5b5a');
-const matt = Player('Matt', '#00d5b1');
+// const joe = Player('Joe', '#fe5b5a');
+// const matt = Player('Matt', '#00d5b1');
 
 const gameBoard = (() => {
   const board = [
@@ -150,8 +150,10 @@ const displayController = (() => {
   return { update };
 })();
 
-const game = ((player1, player2) => {
-  let currentPlayer = (Math.random() <= 0.5) ? player1 : player2;
+const game = (() => {
+  let player1 = null;
+  let player2 = null;
+  let currentPlayer = null;
   let gameover = false;
 
   const nextSelection = (cell) => {
@@ -171,14 +173,38 @@ const game = ((player1, player2) => {
     displayController.update(currentPlayer, gameover, tie);
   };
 
-  const setup = () => {
+  const setup = (firstPlayer, secondPlayer) => {
+    player1 = firstPlayer;
+    player2 = secondPlayer;
+    currentPlayer = (Math.random() <= 0.5) ? player1 : player2;
     const cells = document.querySelectorAll('.cell');
     cells.forEach((cell) => {
       cell.addEventListener('click', nextSelection.bind(this, cell));
     });
-    displayController.update(currentPlayer);
+    displayController.update(currentPlayer, false, false);
   };
   return { setup };
-})(matt, joe);
+})();
 
-game.setup();
+const input = (() => {
+  const colors = ['#fe5b5a', '#00d5b1'];
+  let firstPlayer = null;
+  let secondPlayer = null;
+  const getFirstPlayer = () => firstPlayer;
+  const getSecondPlayer = () => secondPlayer;
+  const storeInput = (event) => {
+    const firstPlayerName = document.getElementById('first-player').value;
+    const secondPlayerName = document.getElementById('second-player').value;
+    firstPlayer = Player(firstPlayerName, colors[0]);
+    secondPlayer = Player(secondPlayerName, colors[1]);
+    game.setup(firstPlayer, secondPlayer);
+    event.preventDefault();
+  };
+  const setup = () => {
+    const form = document.getElementById('form');
+    form.addEventListener('submit', storeInput);
+  };
+  return { setup, getFirstPlayer, getSecondPlayer };
+})();
+
+input.setup();
