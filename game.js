@@ -113,6 +113,7 @@ const gameBoard = (() => {
     }
     if (!player1 || !player2) return false;
     // no possibility of win!
+    console.log('TIE!!!');
     return true;
   };
   return {
@@ -125,7 +126,7 @@ const gameBoard = (() => {
 })();
 
 const displayController = (() => {
-  const update = (currentPlayer, gameover) => {
+  const update = (currentPlayer, gameover, tie) => {
     const cells = document.querySelectorAll('.cell');
     cells.forEach((cell) => {
       const row = +cell.dataset.row;
@@ -136,10 +137,14 @@ const displayController = (() => {
       }
     });
     const currentTurn = document.querySelector('.current-turn');
-    if (gameover) {
-      currentTurn.textContent = `${currentPlayer.getName()} wins!`;
+    console.log(`in display tie status: ${tie}`);
+    if (tie) {
+      console.log('now this will piss me off');
+      currentTurn.innerHTML = 'In war there is no winner...';
+    } else if (gameover) {
+      currentTurn.innerHTML = `${currentPlayer.getName()} wins!`;
     } else {
-      currentTurn.textContent = `${currentPlayer.getName()}'s turn`;
+      currentTurn.innerHTML = `${currentPlayer.getName()}'s turn`;
     }
   };
   return { update };
@@ -156,13 +161,14 @@ const game = ((player1, player2) => {
     if (!gameBoard.cellEmpty(row, col)) return;
     gameBoard.select(currentPlayer, row, col);
     const winner = gameBoard.getWinner();
-
-    if (winner) {
+    const tie = gameBoard.detectTie();
+    console.log(`tie status: ${tie}`);
+    if (winner || tie) {
       gameover = true;
     } else {
       currentPlayer = currentPlayer === player1 ? player2 : player1;
     }
-    displayController.update(currentPlayer, gameover);
+    displayController.update(currentPlayer, gameover, tie);
   };
 
   const setup = () => {
