@@ -21,7 +21,6 @@ const gameBoard = (() => {
   const cellEmpty = (row, col) => Object.keys(board[row][col]).length === 0;
   const getCellPlayer = (row, col) => board[row][col];
   const getWinner = () => {
-    // TODO: detect tie!
     // rows
     for (let row = 0; row < 3; row++) {
       if (
@@ -49,16 +48,84 @@ const gameBoard = (() => {
     }
     return null;
   };
+  const detectTie = () => {
+    // if any threes is empty or only has one type => return false
+
+    // rows
+    for (let row = 0; row < 3; row++) {
+      let player1 = null;
+      let player2 = null;
+      for (let col = 0; col < 3; col++) {
+        const currentCellPlayer = getCellPlayer(row, col);
+        if (!cellEmpty(row, col)) {
+          if (!player1) {
+            player1 = currentCellPlayer;
+          } else if (player1 !== currentCellPlayer) {
+            player2 = currentCellPlayer;
+          }
+        }
+      }
+      if (!player1 || !player2) return false;
+    }
+    // cols
+    for (let col = 0; col < 3; col++) {
+      let player1 = null;
+      let player2 = null;
+      for (let row = 0; row < 3; row++) {
+        const currentCellPlayer = getCellPlayer(row, col);
+        if (!cellEmpty(row, col)) {
+          if (!player1) {
+            player1 = currentCellPlayer;
+          } else if (player1 !== currentCellPlayer) {
+            player2 = currentCellPlayer;
+          }
+        }
+      }
+      if (!player1 || !player2) return false;
+    }
+    // top left to bottom right diagonal [0,0], [1,1], [2,2]
+    let player1 = null;
+    let player2 = null;
+    for (let row = 0; row < 3; row++) {
+      const currentCellPlayer = getCellPlayer(row, row);
+      if (!cellEmpty(row, row)) {
+        if (!player1) {
+          player1 = currentCellPlayer;
+        } else if (player1 !== currentCellPlayer) {
+          player2 = currentCellPlayer;
+        }
+      }
+    }
+    if (!player1 || !player2) return false;
+    // bottom left to top right diagonal [0,2], [1,1], [2,0]
+    //                                     0      1      2
+    player1 = null;
+    player2 = null;
+    for (let row = 0; row < 3; row++) {
+      const currentCellPlayer = getCellPlayer(row, 2 - row);
+      if (!cellEmpty(row, 2 - row)) {
+        if (!player1) {
+          player1 = currentCellPlayer;
+        } else if (player1 !== currentCellPlayer) {
+          player2 = currentCellPlayer;
+        }
+      }
+    }
+    if (!player1 || !player2) return false;
+    // no possibility of win!
+    return true;
+  };
   return {
     select,
     cellEmpty,
     getCellPlayer,
     getWinner,
+    detectTie,
   };
 })();
 
 const displayController = (() => {
-  const update = (currentPlayer) => {
+  const update = (currentPlayer, gameover) => {
     const cells = document.querySelectorAll('.cell');
     cells.forEach((cell) => {
       const row = +cell.dataset.row;
@@ -69,15 +136,18 @@ const displayController = (() => {
       }
     });
     const currentTurn = document.querySelector('.current-turn');
-    console.log(currentTurn);
-    currentTurn.textContent = `${currentPlayer.getName()}'s turn`;
+    if (gameover) {
+      currentTurn.textContent = `${currentPlayer.getName()} wins!`;
+    } else {
+      currentTurn.textContent = `${currentPlayer.getName()}'s turn`;
+    }
   };
   return { update };
 })();
 
 const game = ((player1, player2) => {
-  let currentPlayer = player1;
-  const gameover = false;
+  let currentPlayer = (Math.random() <= 0.5) ? player1 : player2;
+  let gameover = false;
 
   const nextSelection = (cell) => {
     if (gameover === true) return;
@@ -85,8 +155,14 @@ const game = ((player1, player2) => {
     const col = +cell.dataset.col;
     if (!gameBoard.cellEmpty(row, col)) return;
     gameBoard.select(currentPlayer, row, col);
-    currentPlayer = (currentPlayer === player1) ? player2 : player1;
-    displayController.update(currentPlayer);
+    const winner = gameBoard.getWinner();
+
+    if (winner) {
+      gameover = true;
+    } else {
+      currentPlayer = currentPlayer === player1 ? player2 : player1;
+    }
+    displayController.update(currentPlayer, gameover);
   };
 
   const setup = () => {
