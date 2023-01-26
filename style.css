@@ -5,12 +5,12 @@
 
 body{
   height: 100vh;
-  color: #00d5b1;
-  background-color: white;
+  color: #faff6f;
+  background-color: black;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 50px;
+  gap: 30px;
 }
 
 .header-title{
@@ -27,16 +27,61 @@ body{
   display: grid;
   grid: repeat(3, 150px)/ repeat(3, 150px);
   place-content: center;
-  border: 2px solid #00473b;
+  border: 2px solid #d6c100;
   width: min-content;
 }
 .cell{
-  border: 1px solid #00473b;
+  border: 2px solid #d6c100;
 }
 
-/* .cell:nth-child(2n+1){
-  background-color: #00d5b1;
+form{
+  font-size: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px
 }
-.cell:nth-child(2n+2){
-  background-color: rgb(36, 36, 36);
-} */
+
+.names{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+}
+
+.first-name,
+.second-name{
+  display: flex;
+  flex-direction: column;
+}
+
+input{
+  background-color: rgb(58, 57, 57);
+  border-radius: 10px;
+  height: max-content;
+  font-size: 24px;
+}
+
+input[type='text']{
+  padding-left: 5px;
+}
+
+#first-label, 
+#first-player{
+  color: #00d5b1;
+}
+
+#second-label,
+#second-player{
+  color: #fe5b5a;
+}
+
+input[type='submit']{
+  font-size: 24px;
+  color: #faff6f;
+  height: min-content;
+  width: min-content;
+  padding: 5px
+}
+
+

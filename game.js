@@ -141,10 +141,13 @@ const displayController = (() => {
     if (tie) {
       console.log('now this will piss me off');
       currentTurn.innerHTML = 'In war there is no winner...';
+      currentTurn.style.color = '#faff6f';
     } else if (gameover) {
       currentTurn.innerHTML = `${currentPlayer.getName()} wins!`;
+      currentTurn.style.color = currentPlayer.getColor();
     } else {
       currentTurn.innerHTML = `${currentPlayer.getName()}'s turn`;
+      currentTurn.style.color = currentPlayer.getColor();
     }
   };
   return { update };
