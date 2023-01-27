@@ -6,9 +6,6 @@ const Player = (name, color) => {
   return { getName, getColor };
 };
 
-// const joe = Player('Joe', '#fe5b5a');
-// const matt = Player('Matt', '#00d5b1');
-
 const gameBoard = (() => {
   const board = [
     [{}, {}, {}],
@@ -98,7 +95,6 @@ const gameBoard = (() => {
     }
     if (!player1 || !player2) return false;
     // bottom left to top right diagonal [0,2], [1,1], [2,0]
-    //                                     0      1      2
     player1 = null;
     player2 = null;
     for (let row = 0; row < 3; row++) {
@@ -113,7 +109,6 @@ const gameBoard = (() => {
     }
     if (!player1 || !player2) return false;
     // no possibility of win!
-    console.log('TIE!!!');
     return true;
   };
   return {
@@ -137,14 +132,14 @@ const displayController = (() => {
       }
     });
     const currentTurn = document.querySelector('.current-turn');
-    console.log(`in display tie status: ${tie}`);
-    if (tie) {
-      console.log('now this will piss me off');
-      currentTurn.innerHTML = 'In war there is no winner...';
-      currentTurn.style.color = '#faff6f';
-    } else if (gameover) {
-      currentTurn.innerHTML = `${currentPlayer.getName()} wins!`;
-      currentTurn.style.color = currentPlayer.getColor();
+    if (gameover) {
+      if (tie) {
+        currentTurn.innerHTML = 'In war there is no winner...';
+        currentTurn.style.color = '#faff6f';
+      } else {
+        currentTurn.innerHTML = `${currentPlayer.getName()} wins!`;
+        currentTurn.style.color = currentPlayer.getColor();
+      }
     } else {
       currentTurn.innerHTML = `${currentPlayer.getName()}'s turn`;
       currentTurn.style.color = currentPlayer.getColor();

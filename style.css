@@ -75,8 +75,13 @@ input[type='text']{
 #second-player{
   color: #fe5b5a;
 }
+.buttons {
+  display: flex;
+  justify-items: left;
+  gap: 20px;
+}
 
-input[type='submit']{
+.buttons > input{
   font-size: 24px;
   color: #faff6f;
   height: min-content;
