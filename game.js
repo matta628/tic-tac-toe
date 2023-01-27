@@ -111,12 +111,22 @@ const gameBoard = (() => {
     // no possibility of win!
     return true;
   };
+
+  const reset = () => {
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        board[i][j] = {};
+      }
+    }
+  };
+
   return {
     select,
     cellEmpty,
     getCellPlayer,
     getWinner,
     detectTie,
+    reset,
   };
 })();
 
@@ -129,9 +139,15 @@ const displayController = (() => {
       if (!gameBoard.cellEmpty(row, col)) {
         const player = gameBoard.getCellPlayer(row, col);
         cell.style.backgroundColor = player.getColor();
+      } else {
+        cell.style.backgroundColor = 'black';
       }
     });
     const currentTurn = document.querySelector('.current-turn');
+    if (!currentPlayer) {
+      currentTurn.innerHTML = '';
+      return;
+    }
     if (gameover) {
       if (tie) {
         currentTurn.innerHTML = 'In war there is no winner...';
@@ -153,6 +169,7 @@ const game = (() => {
   let player2 = null;
   let currentPlayer = null;
   let gameover = false;
+  let tie = false;
 
   const nextSelection = (cell) => {
     if (gameover === true) return;
@@ -161,8 +178,7 @@ const game = (() => {
     if (!gameBoard.cellEmpty(row, col)) return;
     gameBoard.select(currentPlayer, row, col);
     const winner = gameBoard.getWinner();
-    const tie = gameBoard.detectTie();
-    console.log(`tie status: ${tie}`);
+    tie = gameBoard.detectTie();
     if (winner || tie) {
       gameover = true;
     } else {
@@ -179,13 +195,23 @@ const game = (() => {
     cells.forEach((cell) => {
       cell.addEventListener('click', nextSelection.bind(this, cell));
     });
+    displayController.update(currentPlayer, gameover, tie);
+  };
+
+  const reset = () => {
+    player1 = null;
+    player2 = null;
+    currentPlayer = null;
+    gameover = false;
+    tie = false;
+    gameBoard.reset();
     displayController.update(currentPlayer, false, false);
   };
-  return { setup };
+  return { setup, reset };
 })();
 
 const input = (() => {
-  const colors = ['#fe5b5a', '#00d5b1'];
+  const colors = ['#00d5b1', '#fe5b5a'];
   let firstPlayer = null;
   let secondPlayer = null;
   const getFirstPlayer = () => firstPlayer;
@@ -193,14 +219,21 @@ const input = (() => {
   const storeInput = (event) => {
     const firstPlayerName = document.getElementById('first-player').value;
     const secondPlayerName = document.getElementById('second-player').value;
+    document.getElementById('form').reset();
     firstPlayer = Player(firstPlayerName, colors[0]);
     secondPlayer = Player(secondPlayerName, colors[1]);
     game.setup(firstPlayer, secondPlayer);
     event.preventDefault();
   };
+  const reset = () => {
+    console.log('resetting shit BITCH');
+    game.reset();
+  };
   const setup = () => {
     const form = document.getElementById('form');
     form.addEventListener('submit', storeInput);
+    const resetButton = document.getElementById('reset-button');
+    resetButton.addEventListener('click', reset);
   };
   return { setup, getFirstPlayer, getSecondPlayer };
 })();
